@@ -4,6 +4,10 @@ Zero-dependency frontend and server SDK for HVT.
 
 This repository contains the standalone TypeScript client for the HVT authentication platform.
 
+- Main app: [hvts.app](https://hvts.app)
+- Docs: [docs.hvts.app](https://docs.hvts.app)
+- Backend platform: [markodera/hvt](https://github.com/markodera/hvt)
+
 ## Install
 
 ```bash
@@ -66,6 +70,8 @@ const session = await client.runtime.login({
 
 This repository only contains the TypeScript SDK.
 
+- Main app: [hvts.app](https://hvts.app)
+- Docs: [docs.hvts.app](https://docs.hvts.app)
 - Backend API and platform code: [markodera/hvt](https://github.com/markodera/hvt)
 - SDK issues: [markodera/hvt-sdk/issues](https://github.com/markodera/hvt-sdk/issues)
 
