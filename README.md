@@ -5,8 +5,10 @@ Zero-dependency frontend and server SDK for HVT.
 This repository contains the standalone TypeScript client for the HVT authentication platform.
 
 - Main app: [hvts.app](https://hvts.app)
+- Direct API base URL: [api.hvts.app](https://api.hvts.app)
 - Docs: [docs.hvts.app](https://docs.hvts.app)
-- Backend platform: [markodera/hvt](https://github.com/markodera/hvt)
+- Backend API and platform code: [markodera/hvt](https://github.com/markodera/hvt)
+- SDK issues: [markodera/hvt-sdk/issues](https://github.com/markodera/hvt-sdk/issues)
 
 ## Install
 
@@ -65,15 +67,7 @@ const session = await client.runtime.login({
 - Cookie auth is supported. The client defaults to `credentials: "include"`.
 - Runtime auth requires the `auth:runtime` scope.
 - Failed refreshes clear the in-memory access token and dispatch `auth:logout` by default so apps can react consistently.
-
-## Repository Scope
-
-This repository only contains the TypeScript SDK.
-
-- Main app: [hvts.app](https://hvts.app)
-- Docs: [docs.hvts.app](https://docs.hvts.app)
-- Backend API and platform code: [markodera/hvt](https://github.com/markodera/hvt)
-- SDK issues: [markodera/hvt-sdk/issues](https://github.com/markodera/hvt-sdk/issues)
+- If you are integrating from a language without an SDK, call the HTTP API directly at `https://api.hvts.app`.
 
 ## License
 
