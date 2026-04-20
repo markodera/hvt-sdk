@@ -181,6 +181,15 @@ export class AuthAPI {
     });
   }
 
+  verifyEmail(payload, options) {
+    return this.client.request("/api/v1/auth/runtime/register/verify-email/", {
+      method: "POST",
+      body: payload,
+      auth: "apiKey",
+      ...options,
+    });
+  }
+
   passwordReset(payload, options) {
     return this.client.request("/api/v1/auth/password/reset/", {
       method: "POST",

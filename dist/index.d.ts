@@ -391,6 +391,7 @@ export declare class AuthAPI {
   updateMe(payload: UserUpdateInput, options?: RequestOptions): Promise<User>;
   refresh(payload?: Record<string, unknown>, options?: RequestOptions): Promise<JWTResponse>;
   register(payload: RegisterInput, options?: RequestOptions): Promise<unknown>;
+  verifyEmail(payload: { key: string }, options?: RequestOptions): Promise<unknown>;
   passwordReset(payload: PasswordResetInput, options?: RequestOptions): Promise<{ detail: string }>;
   passwordChange(payload: PasswordChangeInput, options?: RequestOptions): Promise<{ detail: string }>;
   listSocialProviders(options?: RequestOptions): Promise<{ providers: SocialProviderDescriptor[] }>;
