@@ -152,6 +152,13 @@ export interface PasswordResetInput {
   email: string;
 }
 
+export interface PasswordResetConfirmParams {
+  uid: string;
+  token: string;
+  new_password1: string;
+  new_password2: string;
+}
+
 export interface PasswordChangeInput {
   new_password1: string;
   new_password2: string;
@@ -393,6 +400,7 @@ export declare class AuthAPI {
   register(payload: RegisterInput, options?: RequestOptions): Promise<unknown>;
   verifyEmail(payload: { key: string }, options?: RequestOptions): Promise<unknown>;
   passwordReset(payload: PasswordResetInput, options?: RequestOptions): Promise<{ detail: string }>;
+  passwordResetConfirm(payload: PasswordResetConfirmParams, options?: RequestOptions): Promise<unknown>;
   passwordChange(payload: PasswordChangeInput, options?: RequestOptions): Promise<{ detail: string }>;
   listSocialProviders(options?: RequestOptions): Promise<{ providers: SocialProviderDescriptor[] }>;
   socialGoogle(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;

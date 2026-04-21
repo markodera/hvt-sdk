@@ -182,9 +182,13 @@ export class AuthAPI {
   }
 
   verifyEmail(payload, options) {
+    const data = { ...payload };
+    if (typeof data.key === "string") {
+      data.key = decodeURIComponent(data.key);
+    }
     return this.client.request("/api/v1/auth/runtime/register/verify-email/", {
       method: "POST",
-      body: payload,
+      body: data,
       auth: "apiKey",
       ...options,
     });
@@ -194,6 +198,21 @@ export class AuthAPI {
     return this.client.request("/api/v1/auth/password/reset/", {
       method: "POST",
       body: payload,
+      auth: "none",
+      ...options,
+    });
+  }
+
+  passwordResetConfirm(payload, options) {
+    const safeUid = decodeURIComponent(payload.uid);
+    const safeToken = decodeURIComponent(payload.token);
+
+    return this.client.request(`/api/v1/auth/runtime/password/reset/confirm/${safeUid}/${safeToken}/`, {
+      method: "POST",
+      body: {
+        new_password1: payload.new_password1,
+        new_password2: payload.new_password2
+      },
       auth: "none",
       ...options,
     });
@@ -516,18 +535,20 @@ export class OrganizationsAPI {
   }
 
   lookupInvitation(token, options) {
+    const decodedToken = token ? decodeURIComponent(token) : token;
     return this.client.request("/api/v1/organizations/invitations/lookup/", {
       method: "GET",
-      query: { token },
+      query: { token: decodedToken },
       auth: "none",
       ...options,
     });
   }
 
   acceptInvitation(token, options) {
+    const decodedToken = token ? decodeURIComponent(token) : token;
     return this.client.request("/api/v1/organizations/invitations/accept/", {
       method: "POST",
-      body: { token },
+      body: { token: decodedToken },
       ...options,
     });
   }
