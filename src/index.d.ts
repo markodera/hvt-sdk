@@ -129,6 +129,20 @@ export interface User {
   created_at: string;
 }
 
+export interface UserProjectRoleSummary {
+  id: string;
+  slug: string;
+  name: string;
+  project: string;
+  project_slug: string;
+}
+
+export interface RuntimeUser extends User {
+  organization_slug: string | null;
+  app_roles: UserProjectRoleSummary[];
+  app_permissions: string[];
+}
+
 export interface OrganizationMember extends User {
   can_promote?: boolean;
   can_demote?: boolean;
@@ -408,6 +422,7 @@ export declare class AuthAPI {
   listRuntimeSocialProviders(options?: RequestOptions): Promise<RuntimeSocialProviderList>;
   runtimeGoogle(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
   runtimeGithub(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
+  runtimeMe(options?: RequestOptions): Promise<RuntimeUser>;
 }
 
 export declare class OrganizationsAPI {

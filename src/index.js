@@ -285,6 +285,13 @@ export class AuthAPI {
       ...options,
     });
   }
+
+  runtimeMe(options) {
+    return this.client.request("/api/v1/auth/runtime/me/", {
+      method: "GET",
+      ...options,
+    });
+  }
 }
 
 export class OrganizationsAPI {
