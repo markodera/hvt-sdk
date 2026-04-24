@@ -1,6 +1,6 @@
 {
   "name": "@hvt/sdk",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Zero-dependency fetch client for the HVT Authentication API.",
   "homepage": "https://github.com/markodera/hvt-sdk",
   "repository": {
