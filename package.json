@@ -40,8 +40,5 @@
   "sideEffects": false,
   "scripts": {
     "build": "node ./scripts/build.mjs"
-  },
-  "dependencies": {
-    "@hvt/sdk": "^0.1.3"
   }
 }

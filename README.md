@@ -26,7 +26,7 @@ node ./scripts/build.mjs
 
 The build copies `src/index.js` and `src/index.d.ts` into `dist/`.
 
-## Usage
+## Control Plane Auth
 
 ```ts
 import { HVTClient } from "@hvt/sdk";
@@ -42,6 +42,7 @@ const session = await client.auth.login({
 
 client.setAccessToken(session.access);
 
+const me = await client.auth.me();
 const org = await client.organizations.current();
 const users = await client.users.list({ page_size: 25 });
 ```
@@ -49,20 +50,28 @@ const users = await client.users.list({ page_size: 25 });
 ## Runtime Auth with API Keys
 
 ```ts
+import { HVTClient } from "@hvt/sdk";
+
 const client = new HVTClient({
   baseUrl: "http://localhost:8000",
   apiKey: "hvt_test_xxx",
 });
 
-const providers = await client.runtime.socialProviders();
-const session = await client.runtime.login({
+const providers = await client.auth.listRuntimeSocialProviders();
+const session = await client.auth.runtimeLogin({
   email: "customer@example.com",
   password: "password123",
 });
+
+client.setAccessToken(session.access);
+
+const runtimeUser = await client.auth.runtimeMe();
 ```
 
 ## Development Notes
 
+- `client.auth.me()` and `client.auth.updateMe()` target `/api/v1/auth/me/` for the HVT control plane.
+- `client.auth.runtimeMe()` targets `/api/v1/auth/runtime/me/` for API-key-backed integrator apps.
 - JWT takes priority over `X-API-Key` if both are sent. Do not send both at once.
 - Cookie auth is supported. The client defaults to `credentials: "include"`.
 - Runtime auth requires the `auth:runtime` scope.

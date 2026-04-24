@@ -153,6 +153,10 @@ export class AuthAPI {
     });
   }
 
+  /**
+   * Returns the authenticated control-plane user for HVT dashboard/admin flows.
+   * Integrator apps should use runtimeMe().
+   */
   me(options) {
     return this.client.request("/api/v1/auth/me/", {
       method: "GET",
@@ -160,6 +164,10 @@ export class AuthAPI {
     });
   }
 
+  /**
+   * Updates the authenticated control-plane user.
+   * Integrator apps should use the runtime auth endpoints instead.
+   */
   updateMe(payload, options) {
     return this.client.request("/api/v1/auth/me/", {
       method: "PATCH",
@@ -287,6 +295,10 @@ export class AuthAPI {
     });
   }
 
+  /**
+   * Returns the authenticated runtime user for API-key-backed integrations.
+   * Control-plane HVT apps should use me().
+   */
   runtimeMe(options) {
     return this.client.request("/api/v1/auth/runtime/me/", {
       method: "GET",

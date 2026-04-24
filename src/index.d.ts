@@ -407,7 +407,15 @@ export declare class AuthAPI {
   constructor(client: HVTClient);
   login(payload: LoginInput, options?: RequestOptions): Promise<JWTResponse>;
   logout(options?: RequestOptions): Promise<{ detail: string }>;
+  /**
+   * Returns the authenticated control-plane user for HVT dashboard/admin flows.
+   * Integrator apps should use `runtimeMe()`.
+   */
   me(options?: RequestOptions): Promise<User>;
+  /**
+   * Updates the authenticated control-plane user.
+   * Integrator apps should use the runtime auth endpoints instead.
+   */
   updateMe(payload: UserUpdateInput, options?: RequestOptions): Promise<User>;
   refresh(payload?: Record<string, unknown>, options?: RequestOptions): Promise<JWTResponse>;
   register(payload: RegisterInput, options?: RequestOptions): Promise<unknown>;
@@ -422,6 +430,10 @@ export declare class AuthAPI {
   listRuntimeSocialProviders(options?: RequestOptions): Promise<RuntimeSocialProviderList>;
   runtimeGoogle(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
   runtimeGithub(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
+  /**
+   * Returns the authenticated runtime user for API-key-backed integrations.
+   * Control-plane HVT apps should use `me()`.
+   */
   runtimeMe(options?: RequestOptions): Promise<RuntimeUser>;
 }
 
