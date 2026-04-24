@@ -68,6 +68,77 @@ function isPlainObject(value) {
   return Object.prototype.toString.call(value) === "[object Object]";
 }
 
+function resolveSocialCallbackUrl(provider, options = {}) {
+  const preferredCallbackUrl =
+    typeof options.callbackUrl === "string" && options.callbackUrl.trim()
+      ? options.callbackUrl.trim()
+      : null;
+
+  if (preferredCallbackUrl) {
+    return preferredCallbackUrl;
+  }
+
+  const normalizedOrigin =
+    typeof options.origin === "string" && options.origin.trim()
+      ? options.origin.trim()
+      : null;
+
+  const redirectUris = Array.isArray(provider?.redirect_uris)
+    ? provider.redirect_uris
+        .map((redirectUri) =>
+          typeof redirectUri === "string" ? redirectUri.trim() : ""
+        )
+        .filter(Boolean)
+    : [];
+
+  if (normalizedOrigin && redirectUris.length > 0) {
+    const matchingOriginRedirect = redirectUris.find((redirectUri) => {
+      try {
+        return new URL(redirectUri).origin === normalizedOrigin;
+      } catch {
+        return false;
+      }
+    });
+
+    if (matchingOriginRedirect) {
+      return matchingOriginRedirect;
+    }
+  }
+
+  if (
+    typeof provider?.callback_url === "string" &&
+    provider.callback_url.trim()
+  ) {
+    return provider.callback_url.trim();
+  }
+
+  return redirectUris[0] || null;
+}
+
+function appendQueryParams(searchParams, query) {
+  if (!query || typeof query !== "object") {
+    return;
+  }
+
+  for (const [key, value] of Object.entries(query)) {
+    if (value === undefined || value === null || value === "") {
+      continue;
+    }
+
+    if (Array.isArray(value)) {
+      searchParams.delete(key);
+      for (const item of value) {
+        if (item !== undefined && item !== null && item !== "") {
+          searchParams.append(key, String(item));
+        }
+      }
+      continue;
+    }
+
+    searchParams.set(key, String(value));
+  }
+}
+
 async function parseResponseBody(response) {
   if (response.status === 204) {
     return undefined;
@@ -240,6 +311,58 @@ export class AuthAPI {
       auth: "none",
       ...options,
     });
+  }
+
+  buildSocialAuthorizationUrl(provider, options = {}) {
+    if (!provider || typeof provider !== "object") {
+      throw new Error("A social provider descriptor is required.");
+    }
+
+    if (
+      typeof provider.authorization_url !== "string" ||
+      !provider.authorization_url.trim()
+    ) {
+      throw new Error("The social provider is missing authorization_url.");
+    }
+
+    if (typeof provider.client_id !== "string" || !provider.client_id.trim()) {
+      throw new Error("The social provider is missing client_id.");
+    }
+
+    const url = new URL(provider.authorization_url);
+    const callbackUrl = resolveSocialCallbackUrl(provider, options);
+    const scopes = Array.isArray(options.scopes)
+      ? options.scopes.filter(Boolean)
+      : Array.isArray(provider.scope)
+        ? provider.scope.filter(Boolean)
+        : [];
+
+    url.searchParams.set("client_id", provider.client_id.trim());
+
+    if (callbackUrl) {
+      url.searchParams.set("redirect_uri", callbackUrl);
+    }
+
+    if (scopes.length > 0) {
+      url.searchParams.set("scope", scopes.join(" "));
+    }
+
+    if (typeof options.state === "string" && options.state.length > 0) {
+      url.searchParams.set("state", options.state);
+    }
+
+    if (
+      typeof options.responseType === "string" &&
+      options.responseType.length > 0
+    ) {
+      url.searchParams.set("response_type", options.responseType);
+    } else if (provider.provider === "google") {
+      url.searchParams.set("response_type", "code");
+    }
+
+    appendQueryParams(url.searchParams, options.query);
+
+    return url.toString();
   }
 
   socialGoogle(payload, options) {

@@ -77,12 +77,26 @@ export interface JWTResponse {
 export interface SocialProviderDescriptor {
   provider: string;
   client_id: string;
+  /**
+   * Authorization endpoint returned by HVT for this provider.
+   * Use `client.auth.buildSocialAuthorizationUrl()` to construct the final
+   * browser-ready OAuth URL.
+   */
   authorization_url: string;
   scope: string[];
   callback_url?: string;
   redirect_uris?: string[];
   project_id?: string;
   project_slug?: string;
+}
+
+export interface SocialAuthorizationUrlOptions {
+  callbackUrl?: string;
+  origin?: string;
+  scopes?: string[];
+  state?: string;
+  responseType?: string;
+  query?: QueryParams;
 }
 
 export interface RuntimeSocialProviderList {
@@ -182,6 +196,7 @@ export interface RuntimeSocialLoginInput {
   code?: string;
   access_token?: string;
   callback_url?: string;
+  role_slug?: string;
   [key: string]: unknown;
 }
 
@@ -425,6 +440,7 @@ export declare class AuthAPI {
   passwordResetConfirm(payload: PasswordResetConfirmParams, options?: RequestOptions): Promise<unknown>;
   passwordChange(payload: PasswordChangeInput, options?: RequestOptions): Promise<{ detail: string }>;
   listSocialProviders(options?: RequestOptions): Promise<{ providers: SocialProviderDescriptor[] }>;
+  buildSocialAuthorizationUrl(provider: SocialProviderDescriptor, options?: SocialAuthorizationUrlOptions): string;
   socialGoogle(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
   socialGithub(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
   runtimeLogin(payload: LoginInput, options?: RequestOptions): Promise<JWTResponse>;

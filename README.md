@@ -58,6 +58,23 @@ const client = new HVTClient({
 });
 
 const providers = await client.auth.listRuntimeSocialProviders();
+const github = providers.providers.find((provider) => provider.provider === "github");
+
+if (github) {
+  const authorizationUrl = client.auth.buildSocialAuthorizationUrl(github, {
+    origin: "http://localhost:3000",
+    state: "optional-csrf-state",
+  });
+
+  console.log(authorizationUrl);
+}
+
+const socialSession = await client.auth.runtimeGithub({
+  code: "github-oauth-code",
+  callback_url: "http://localhost:3000/auth/github/callback",
+  role_slug: "seller",
+});
+
 const session = await client.auth.runtimeLogin({
   email: "customer@example.com",
   password: "password123",
@@ -72,6 +89,8 @@ const runtimeUser = await client.auth.runtimeMe();
 
 - `client.auth.me()` and `client.auth.updateMe()` target `/api/v1/auth/me/` for the HVT control plane.
 - `client.auth.runtimeMe()` targets `/api/v1/auth/runtime/me/` for API-key-backed integrator apps.
+- `provider.authorization_url` from `listSocialProviders()` / `listRuntimeSocialProviders()` is the provider authorization endpoint. Use `client.auth.buildSocialAuthorizationUrl(provider, options)` to build the final browser-ready OAuth URL.
+- Runtime social signup can include an optional `role_slug` for a self-assignable project role. Your frontend should persist the selected role through the OAuth redirect and send it with `code` and `callback_url` on the callback request.
 - JWT takes priority over `X-API-Key` if both are sent. Do not send both at once.
 - Cookie auth is supported. The client defaults to `credentials: "include"`.
 - Runtime auth requires the `auth:runtime` scope.
