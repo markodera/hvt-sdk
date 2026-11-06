@@ -443,15 +443,52 @@ export declare class AuthAPI {
   buildSocialAuthorizationUrl(provider: SocialProviderDescriptor, options?: SocialAuthorizationUrlOptions): string;
   socialGoogle(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
   socialGithub(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
+  socialDiscord(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
+  socialApple(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
+  socialMicrosoft(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
+  socialGitlab(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
+
+  requestMagicLink(payload: { email: string }, options?: RequestOptions): Promise<{ detail: string }>;
+  verifyMagicLink(payload: { token: string }, options?: RequestOptions): Promise<JWTResponse>;
+
+  getPasskeyRegisterOptions(options?: RequestOptions): Promise<Record<string, unknown>>;
+  verifyPasskeyRegister(payload: Record<string, unknown>, options?: RequestOptions): Promise<{ id: string; name: string; detail: string }>;
+  getPasskeyAuthOptions(payload?: { email?: string }, options?: RequestOptions): Promise<Record<string, unknown>>;
+  verifyPasskeyAuth(payload: { challenge_key: string; credential: Record<string, unknown> }, options?: RequestOptions): Promise<JWTResponse>;
+  listPasskeys(options?: RequestOptions): Promise<{ passkeys: Array<{ id: string; name: string; created_at: string; last_used_at: string | null; backed_up: boolean }> }>;
+  deletePasskey(id: string, options?: RequestOptions): Promise<{ detail: string }>;
+  registerPasskey(options?: { name?: string }): Promise<{ id: string; name: string; detail: string }>;
+  loginWithPasskey(options?: { email?: string }): Promise<JWTResponse>;
+
   runtimeLogin(payload: LoginInput, options?: RequestOptions): Promise<JWTResponse>;
   listRuntimeSocialProviders(options?: RequestOptions): Promise<RuntimeSocialProviderList>;
   runtimeGoogle(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
   runtimeGithub(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
+  runtimeDiscord(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
+  runtimeApple(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
+  runtimeMicrosoft(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
+  runtimeGitlab(payload: RuntimeSocialLoginInput, options?: RequestOptions): Promise<unknown>;
+
+  runtimeRequestMagicLink(payload: { email: string; role_slug?: string }, options?: RequestOptions): Promise<{ detail: string }>;
+  runtimeVerifyMagicLink(payload: { token: string }, options?: RequestOptions): Promise<JWTResponse>;
+
+  runtimeGetPasskeyRegisterOptions(options?: RequestOptions): Promise<Record<string, unknown>>;
+  runtimeVerifyPasskeyRegister(payload: Record<string, unknown>, options?: RequestOptions): Promise<{ id: string; name: string; detail: string }>;
+  runtimeGetPasskeyAuthOptions(payload?: { email?: string }, options?: RequestOptions): Promise<Record<string, unknown>>;
+  runtimeVerifyPasskeyAuth(payload: { challenge_key: string; credential: Record<string, unknown> }, options?: RequestOptions): Promise<JWTResponse>;
+  runtimeRegisterPasskey(options?: { name?: string }): Promise<{ id: string; name: string; detail: string }>;
+  runtimeLoginWithPasskey(options?: { email?: string }): Promise<JWTResponse>;
+
   /**
    * Returns the authenticated runtime user for API-key-backed integrations.
    * Control-plane HVT apps should use `me()`.
    */
   runtimeMe(options?: RequestOptions): Promise<RuntimeUser>;
+
+  mfaStatus(options?: RequestOptions): Promise<{ is_mfa_enabled: boolean; last_verified_at: string | null }>;
+  setupMFA(options?: RequestOptions): Promise<{ secret: string; otpauth_url: string; detail: string }>;
+  verifyMFA(code: string, options?: RequestOptions): Promise<{ detail: string; is_mfa_enabled: boolean; last_verified_at: string }>;
+  disableMFA(payload: string | { password?: string; code?: string }, options?: RequestOptions): Promise<{ detail: string; is_mfa_enabled: boolean }>;
 }
 
 export declare class OrganizationsAPI {

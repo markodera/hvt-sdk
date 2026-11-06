@@ -1,6 +1,6 @@
 {
   "name": "@hvt/sdk",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "Zero-dependency fetch client for the HVT Authentication API.",
   "homepage": "https://github.com/markodera/hvt-sdk",
   "repository": {
@@ -19,7 +19,7 @@
     "identity",
     "hvt"
   ],
-  "license": "AGPL-3.0-only",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -27,6 +27,10 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/react.js",
+      "types": "./dist/react.d.ts"
     }
   },
   "files": [

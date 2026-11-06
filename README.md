@@ -85,6 +85,44 @@ client.setAccessToken(session.access);
 const runtimeUser = await client.auth.runtimeMe();
 ```
 
+## React Hooks & Components
+
+```tsx
+import { HVTClient } from "@hvt/sdk";
+import { HVTProvider, useHVTAuth, PermissionGate, RoleGate } from "@hvt/sdk/react";
+
+const client = new HVTClient({
+  baseUrl: "https://api.hvts.app",
+  apiKey: "hvt_live_xxx",
+});
+
+function App() {
+  return (
+    <HVTProvider client={client}>
+      <Dashboard />
+    </HVTProvider>
+  );
+}
+
+function Dashboard() {
+  const { user, login, logout, hasPermission } = useHVTAuth();
+
+  return (
+    <div>
+      <h1>Welcome, {user?.email}</h1>
+
+      <PermissionGate permission="orders.create" fallback={<p>Upgrade to create orders</p>}>
+        <button onClick={() => alert("Order created!")}>Create Order</button>
+      </PermissionGate>
+
+      <RoleGate role="seller">
+        <SellerPortal />
+      </RoleGate>
+    </div>
+  );
+}
+```
+
 ## Development Notes
 
 - `client.auth.me()` and `client.auth.updateMe()` target `/api/v1/auth/me/` for the HVT control plane.
@@ -99,4 +137,4 @@ const runtimeUser = await client.auth.runtimeMe();
 
 ## License
 
-AGPL-3.0-only. See [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).

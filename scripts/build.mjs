@@ -7,7 +7,7 @@ const sourceRoot = path.join(sdkRoot, "src");
 const distRoot = path.join(sdkRoot, "dist");
 
 async function build() {
-  const files = ["index.js", "index.d.ts"];
+  const files = ["index.js", "index.d.ts", "react.js", "react.d.ts", "webauthn.js"];
   await mkdir(distRoot, { recursive: true });
 
   for (const fileName of files) {
